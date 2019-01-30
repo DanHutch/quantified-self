@@ -17,7 +17,7 @@
 
 4. Create a new repository on GitHub named `quantified-self-fe`
 
-5. Add your new repository remote - **your remote URL and user name will be different in the command below**
+5. Add your new repository remote - **your remote URL and user name will be different in the command below
 
   ```shell
   git remote add origin git@github.com:<YOUR GITHUB NAME>/quantified-self-fe.git
