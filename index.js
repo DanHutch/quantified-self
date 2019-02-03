@@ -27,17 +27,21 @@
 
   function loadStructure() {
     container.innerHTML = `
-      <div id="foods-index">
+      <div id="nav-bar">
+        <div>
+          <input id="food-search-field" class="field" type="text" placeholder="Find Food by Name">
+        </div>
         <div class="input-block">
           <input id="new-food-name-field" class="field" type="text" placeholder="New Food Name">
           <input id="new-food-calories-field" class="field" type="integer" placeholder="New Food Calories">
           <button id="add-food-button" class="button" disabled>Add New Food</button>
         </div>
-        <div>
-          <input id="food-search-field" class="field" type="text" placeholder="Find Food by Name">
-        </div>
+      </div>
+
+      <div id="foods-index">
         <table>
           <tr>
+            <th></th>
             <th>Name</th>
             <th>Calories</th>
           </tr>
@@ -123,9 +127,10 @@
 
   function loadFoods(foodsIn) {
     let foodsEntries = foodsIn.map((food) => {
-     return(`<tr class="food">
+     return(`
+       <tr class="food">
         <td>
-          <button id="delete-${food.id}-button", class="button" onclick="deleteFood(${food.id})">
+          <button id="delete-${food.id}-button", class="delete button" onclick="deleteFood(${food.id})">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </td>
@@ -136,12 +141,14 @@
           ${food.calories}
         </td>
         <td>
-          <button class="button" id="edit-food-${food.id}" onclick="openEdit({id: ${food.id}, calories: ${food.calories}, name: '${food.name}'})">
+          <button id="edit-food-${food.id}" class="edit button" onclick="openEdit({id: ${food.id}, calories: ${food.calories}, name: '${food.name}'})">
             <i class="far fa-edit"></i>
           </button>
         </td>
-        <td id="edit-${food.id}-input-area"></td>
-      </tr>`)
+        <td id="edit-${food.id}-name-input-area" class="edit-inputs"></td>
+        <td id="edit-${food.id}-calories-input-area" class="edit-inputs"></td>
+      </tr>
+      `)
     })
     foodsTableBody.innerHTML = foodsEntries.join(" ")
   };
@@ -162,12 +169,14 @@
   };
 
   function openEdit(food) {
-    let editFoodArea = document.querySelector(`#edit-${food.id}-input-area`);
+    let editFoodNameArea = document.querySelector(`#edit-${food.id}-name-input-area`);
+    let editFoodCaloriesArea = document.querySelector(`#edit-${food.id}-calories-input-area`);
+
     let editButton = document.querySelector(`#edit-food-${food.id}`);
-    editFoodArea.innerHTML = `
-      <input id="name-${food.id}-field" value="${food.name}">
-      <input id="calories-${food.id}-field" value="${food.calories}">
-    `
+
+    editFoodNameArea.innerHTML = `<input id="name-${food.id}-field" value="${food.name}">`
+    editFoodCaloriesArea.innerHTML = `<input id="calories-${food.id}-field" value="${food.calories}">`
+
     editButton.innerHTML = '<i class="fa fa-check"></i>';
     editButton.onclick = function() {catchFood(food)};
   };
@@ -199,7 +208,6 @@
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(editFoodBody);
   };
-
 
   function loadFoodsAndDiary() {
     loadStructure();
