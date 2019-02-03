@@ -6,6 +6,8 @@
   let newFoodName;
   let newFoodCalories;
   let addFoodButton;
+  let foods;
+  let foodSearch;
 
 
   function getFoods() {
@@ -13,12 +15,14 @@
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         let foodsResponse = JSON.parse(xhr.response);
+        foods = foodsResponse;
         loadFoods(foodsResponse)
       }
     };
     xhr.open('GET', `https://warm-cove-64806.herokuapp.com/api/v1/foods`);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send();
+
   };
 
   function loadStructure() {
@@ -28,6 +32,9 @@
           <input id="new-food-name-field" class="field" type="text" placeholder="New Food Name">
           <input id="new-food-calories-field" class="field" type="integer" placeholder="New Food Calories">
           <button id="add-food-button" class="button" disabled>Add New Food</button>
+        </div>
+        <div>
+          <input id="food-search-field" class="field" type="text" placeholder="Find Food by Name">
         </div>
         <table>
           <tr>
@@ -45,6 +52,7 @@
     addFoodButton = document.querySelector('#add-food-button');
     newFoodName = document.querySelector('#new-food-name-field');
     newFoodCalories = document.querySelector('#new-food-calories-field');
+    foodSearch = document.querySelector('#food-search-field');
     newFoodName.addEventListener('keyup', checkAddFoodButton);
     newFoodCalories.addEventListener('keyup', checkAddFoodButton);
     newFoodName.addEventListener('keypress', function (e) {
@@ -58,6 +66,22 @@
       }
     });
     addFoodButton.addEventListener('click', newFood);
+    foodSearch.addEventListener('keyup', function () {
+      searchFood(foodSearch.value)
+    });
+  };
+
+  function searchFood(input) {
+    if(input !== "") {
+      let query = input.toLowerCase();
+      let filtered = foods.filter((food) => {
+        let foodName = food.name.toLowerCase()
+        return(foodName.includes(query))
+      })
+      loadFoods(filtered)
+    } else {
+      loadFoods(foods)
+    }
   };
 
   function checkAddFoodButton() {
@@ -97,8 +121,8 @@
   };
 
 
-  function loadFoods(foodsResponse) {
-    let foodsEntries = foodsResponse.map((food) => {
+  function loadFoods(foodsIn) {
+    let foodsEntries = foodsIn.map((food) => {
      return(`<tr class="food">
         <td>
           <button id="delete-${food.id}-button", class="button" onclick="deleteFood(${food.id})">
@@ -123,7 +147,6 @@
   };
 
   function deleteFood(foodID) {
-    console.log(`Ready to delete food with ID ${foodID}`)
     let xhr = new XMLHttpRequest();
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
