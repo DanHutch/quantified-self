@@ -15,3 +15,7 @@ body {
 #diary {
 
 }
+
+.button:hover{
+  color: red;
+}

@@ -126,7 +126,7 @@
      return(`<tr class="food">
         <td>
           <button id="delete-${food.id}-button", class="button" onclick="deleteFood(${food.id})">
-          Delete
+            <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </td>
         <td>
@@ -137,7 +137,7 @@
         </td>
         <td>
           <button class="button" id="edit-food-${food.id}" onclick="openEdit({id: ${food.id}, calories: ${food.calories}, name: '${food.name}'})">
-          Edit
+            <i class="far fa-edit"></i>
           </button>
         </td>
         <td id="edit-${food.id}-input-area"></td>
@@ -168,7 +168,7 @@
       <input id="name-${food.id}-field" value="${food.name}">
       <input id="calories-${food.id}-field" value="${food.calories}">
     `
-    editButton.innerHTML = 'Submit';
+    editButton.innerHTML = '<i class="fa fa-check"></i>';
     editButton.onclick = function() {catchFood(food)};
   };
 
