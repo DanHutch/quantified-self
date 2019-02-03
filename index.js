@@ -101,6 +101,11 @@
     let foodsEntries = foodsResponse.map((food) => {
      return(`<tr class="food">
         <td>
+          <button id="delete-${food.id}-button", class="button" onclick="deleteFood(${food.id})">
+          Delete
+          </button>
+        </td>
+        <td>
           ${food.name}
         </td>
         <td>
@@ -115,6 +120,22 @@
       </tr>`)
     })
     foodsTableBody.innerHTML = foodsEntries.join(" ")
+  };
+
+  function deleteFood(foodID) {
+    console.log(`Ready to delete food with ID ${foodID}`)
+    let xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        getFoods();
+      }
+      else {
+        alert('Something went wrong. Foods may not be deleted if already part of a meal.');
+      }
+    };
+    xhr.open('DELETE', `https://warm-cove-64806.herokuapp.com/api/v1/foods/${foodID}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
   };
 
   function openEdit(food) {
