@@ -98,7 +98,6 @@
 
 
   function loadFoods(foodsResponse) {
-    console.log(foodsResponse)
     let foodsEntries = foodsResponse.map((food) => {
      return(`<tr class="food">
         <td>
@@ -119,7 +118,6 @@
   };
 
   function openEdit(food) {
-    console.log(food.id, food.calories, food.name)
     let editFoodArea = document.querySelector(`#edit-${food.id}-input-area`);
     let editButton = document.querySelector(`#edit-food-${food.id}`);
     editFoodArea.innerHTML = `
@@ -143,7 +141,19 @@
   };
 
   function patchFood(id, attributes) {
-    console.log(attributes)
+    let xhr = new XMLHttpRequest();
+    let editFoodBody = JSON.stringify(attributes);
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        getFoods();
+      }
+      else {
+        alert('something went wrong');
+      }
+    };
+    xhr.open('PATCH', `https://warm-cove-64806.herokuapp.com/api/v1/foods/${id}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(editFoodBody);
   };
 
 
