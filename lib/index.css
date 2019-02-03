@@ -19,7 +19,7 @@ body {
 
 #foods-index{
   margin: 1em;
-
+  border-right: black 1px solid;
 }
 
 #diary {
@@ -53,9 +53,19 @@ table {
 #food-search-field{
   float: right;
   position: relative;
+  width: 20em;
+
 }
 
 .field{
   border: 0.1em #1369bf solid;
   border-radius: 0.2em;
+  text-indent: 0.4em;
+  font-style: italic;
+}
+
+#add-food-button{
+  border: 0.1em #1369bf solid;
+  border-radius: 0.2em;
+  height: 1.55em;
 }

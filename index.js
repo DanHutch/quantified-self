@@ -29,12 +29,12 @@
     container.innerHTML = `
       <div id="nav-bar">
         <div>
-          <input id="food-search-field" class="field" type="text" placeholder="Find Food by Name">
+          <input id="food-search-field" class="field" type="text" placeholder="Search foods...">
         </div>
         <div class="input-block">
           <input id="new-food-name-field" class="field" type="text" placeholder="New Food Name">
           <input id="new-food-calories-field" class="field" type="integer" placeholder="New Food Calories">
-          <button id="add-food-button" class="button" disabled>Add New Food</button>
+          <button id="add-food-button" class="button" disabled><i class="fas fa-plus"></i></button>
         </div>
       </div>
 
@@ -131,7 +131,7 @@
        <tr class="food">
         <td>
           <button id="delete-${food.id}-button", class="delete button" onclick="deleteFood(${food.id})">
-            <i class="fa fa-trash" aria-hidden="true"></i>
+            <i class="fa fa-minus" aria-hidden="true"></i>
           </button>
         </td>
         <td>
