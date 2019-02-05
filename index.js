@@ -8,6 +8,13 @@
   let addFoodButton;
   let foods;
   let foodSearch;
+  let todayGoal;
+  let todayID;
+  let todayMeals;
+  let breakfast;
+  let lunch;
+  let snack;
+  let dinner;
 
 
   function getFoods() {
@@ -22,7 +29,6 @@
     xhr.open('GET', `https://warm-cove-64806.herokuapp.com/api/v1/foods`);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send();
-
   };
 
   function loadStructure() {
@@ -49,8 +55,59 @@
         </tbody>
         </table>
       </div>
+
       <div id="diary">
-        Hello Diary!
+
+        <div id="breakfast" class="meal">
+          <p>Breakfast</p>
+          <table>
+            <tr>
+              <th>Food</th>
+              <th>Calories</th>
+            </tr>
+            <tbody id="breakfast-table-body">
+            </tbody>
+          </table>
+        </div>
+
+        <div id="lunch" class="meal">
+          <p>Lunch</p>
+          <table>
+            <tr>
+              <th>Food</th>
+              <th>Calories</th>
+            </tr>
+            <tbody id="lunch-table-body">
+            </tbody>
+          </table>
+        </div>
+
+        <div id="snack" class="meal">
+          <p>Snack</p>
+          <table>
+            <tr>
+              <th>Food</th>
+              <th>Calories</th>
+            </tr>
+            <tbody id="snack-table-body">
+            </tbody>
+          </table>
+        </div>
+
+        <div id="dinner" class="meal">
+          <p>Dinner</p>
+          <table>
+            <tr>
+              <th>Food</th>
+              <th>Calories</th>
+            </tr>
+            <tbody id="dinner-table-body">
+            </tbody>
+          </table>
+        </div>
+
+        <div id="day-info"></div>
+
       </div>
     `
     addFoodButton = document.querySelector('#add-food-button');
@@ -209,12 +266,131 @@
     xhr.send(editFoodBody);
   };
 
+  function deleteMealFood(mealID, foodID) {
+    let xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        getDiary();
+      }
+      else {
+        alert('Something went wrong.');
+      }
+    };
+    xhr.open('DELETE', `https://warm-cove-64806.herokuapp.com/api/v1/meals/${mealID}/foods/${foodID}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+  };
+
+  function loadDiary(mealsData) {
+console.log(mealsData)
+    let breakfastEntries = mealsData[0].foods.map((food) => {
+      return(`<tr class="food">
+      <td>
+        <button id="delete-meal${mealsData[0].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[0].id}, ${food.id})">
+          Delete
+        </button>
+      </td>
+      <td>
+        ${food.name}
+      </td>
+      <td>
+        ${food.calories}
+      </td>
+      </tr >`)
+    });
+    breakfast.innerHTML = breakfastEntries.join(" ");
+
+    let lunchEntries = mealsData[1].foods.map((food) => {
+      return (`<tr class="food">
+            <td>
+        <button id="delete-meal${mealsData[1].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[1].id}, ${food.id})">
+          Delete
+        </button>
+      </td>
+      <td>
+        ${food.name}
+      </td>
+      <td>
+        ${food.calories}
+      </td>
+      </tr >`)
+    })
+    lunch.innerHTML = lunchEntries.join(" ")
+
+    let snackEntries = mealsData[2].foods.map((food) => {
+      return (`<tr class="food">
+      <td>
+        <button id="delete-meal${mealsData[2].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[2].id}, ${food.id})">
+          Delete
+        </button>
+      </td>
+      <td>
+        ${food.name}
+      </td>
+      <td>
+        ${food.calories}
+      </td>
+      </tr >`)
+    })
+    snack.innerHTML = snackEntries.join(" ")
+
+    let dinnerEntries = mealsData[3].foods.map((food) => {
+      return (`<tr class="food">
+      <td>
+        <button id="delete-meal${mealsData[3].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[3].id}, ${food.id})">
+          Delete
+        </button>
+      </td>
+      <td>
+        ${food.name}
+      </td>
+      <td>
+        ${food.calories}
+      </td>
+      </tr >`)
+    })
+    dinner.innerHTML = dinnerEntries.join(" ")
+  };
+
+  function getDiary() {
+    let xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        let todayResponse = JSON.parse(xhr.response);
+        todayGoal = todayResponse.goal
+        todayID = todayResponse.id
+        getTodayMeals(todayID)
+      }
+    };
+    xhr.open('GET', `https://warm-cove-64806.herokuapp.com/api/v1/today`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+  };
+
+  function getTodayMeals(dayID) {
+    let xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        let todayMealsResponse = JSON.parse(xhr.response);
+        todayMeals = todayMealsResponse
+        loadDiary(todayMeals)
+      }
+    };
+    xhr.open('GET', `https://warm-cove-64806.herokuapp.com/api/v1/days/${todayID}/meals`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+  };
+
   function loadFoodsAndDiary() {
     loadStructure();
     getFoods();
     foodsIndex = document.querySelector('#foods-index')
     foodsTableBody = document.querySelector('#foods-table-body')
-    // load diary function will be invoked here
+    breakfast = document.querySelector('#breakfast-table-body')
+    lunch = document.querySelector('#lunch-table-body')
+    snack = document.querySelector('#snack-table-body')
+    dinner = document.querySelector('#dinner-table-body')
+    getDiary();
   };
 
   document.addEventListener('DOMContentLoaded', loadFoodsAndDiary);
