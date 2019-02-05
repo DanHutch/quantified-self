@@ -38,9 +38,9 @@
           <input id="food-search-field" class="field" type="text" placeholder="Search foods...">
         </div>
         <div class="input-block">
+          <button id="add-food-button" class="button" disabled><i class="fas fa-plus"></i></button>
           <input id="new-food-name-field" class="field" type="text" placeholder="New Food Name">
           <input id="new-food-calories-field" class="field" type="integer" placeholder="New Food Calories">
-          <button id="add-food-button" class="button" disabled><i class="fas fa-plus"></i></button>
         </div>
       </div>
 
