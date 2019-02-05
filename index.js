@@ -38,9 +38,9 @@
           <input id="food-search-field" class="field" type="text" placeholder="Search foods...">
         </div>
         <div class="input-block">
-          <button id="add-food-button" class="button" disabled><i class="fas fa-plus"></i></button>
           <input id="new-food-name-field" class="field" type="text" placeholder="New Food Name">
           <input id="new-food-calories-field" class="field" type="integer" placeholder="New Food Calories">
+          <button id="add-food-button" class="button" disabled><i class="fas fa-plus"></i></button>
         </div>
       </div>
 
@@ -59,12 +59,11 @@
       <div id="diary">
 
         <div id="breakfast" class="meal">
-          <div class="diary-meal-header">Breakfast</div>
+          <p>Breakfast</p>
           <table>
             <tr>
-              <th></th>
-              <th class="diary-food-header">Name</th>
-              <th class="diary-food-header">Calories</th>
+              <th>Food</th>
+              <th>Calories</th>
             </tr>
             <tbody id="breakfast-table-body">
             </tbody>
@@ -72,12 +71,11 @@
         </div>
 
         <div id="lunch" class="meal">
-          <div class="diary-meal-header">Lunch</div>
+          <p>Lunch</p>
           <table>
             <tr>
-              <th></th>
-              <th class="diary-food-header">Name</th>
-              <th class="diary-food-header">Calories</th>
+              <th>Food</th>
+              <th>Calories</th>
             </tr>
             <tbody id="lunch-table-body">
             </tbody>
@@ -85,12 +83,11 @@
         </div>
 
         <div id="snack" class="meal">
-          <div class="diary-meal-header">Snack</div>
+          <p>Snack</p>
           <table>
             <tr>
-              <th></th>
-              <th class="diary-food-header">Name</th>
-              <th class="diary-food-header">Calories</th>
+              <th>Food</th>
+              <th>Calories</th>
             </tr>
             <tbody id="snack-table-body">
             </tbody>
@@ -98,12 +95,11 @@
         </div>
 
         <div id="dinner" class="meal">
-          <div class="diary-meal-header">Dinner</div>
+          <p>Dinner</p>
           <table>
             <tr>
-              <th></th>
-              <th class="diary-food-header">Name</th>
-              <th class="diary-food-header">Calories</th>
+              <th>Food</th>
+              <th>Calories</th>
             </tr>
             <tbody id="dinner-table-body">
             </tbody>
@@ -288,10 +284,10 @@
   function loadDiary(mealsData) {
 console.log(mealsData)
     let breakfastEntries = mealsData[0].foods.map((food) => {
-      return(`<tr class="mealfood">
+      return(`<tr class="food">
       <td>
         <button id="delete-meal${mealsData[0].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[0].id}, ${food.id})">
-          <i class="fa fa-minus" aria-hidden="true"></i>
+          Delete
         </button>
       </td>
       <td>
@@ -305,10 +301,10 @@ console.log(mealsData)
     breakfast.innerHTML = breakfastEntries.join(" ");
 
     let lunchEntries = mealsData[1].foods.map((food) => {
-      return (`<tr class="mealfood">
+      return (`<tr class="food">
             <td>
         <button id="delete-meal${mealsData[1].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[1].id}, ${food.id})">
-          <i class="fa fa-minus" aria-hidden="true"></i>
+          Delete
         </button>
       </td>
       <td>
@@ -322,10 +318,10 @@ console.log(mealsData)
     lunch.innerHTML = lunchEntries.join(" ")
 
     let snackEntries = mealsData[2].foods.map((food) => {
-      return (`<tr class="mealfood">
+      return (`<tr class="food">
       <td>
         <button id="delete-meal${mealsData[2].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[2].id}, ${food.id})">
-          <i class="fa fa-minus" aria-hidden="true"></i>
+          Delete
         </button>
       </td>
       <td>
@@ -339,10 +335,10 @@ console.log(mealsData)
     snack.innerHTML = snackEntries.join(" ")
 
     let dinnerEntries = mealsData[3].foods.map((food) => {
-      return (`<tr class="mealfood">
+      return (`<tr class="food">
       <td>
         <button id="delete-meal${mealsData[3].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[3].id}, ${food.id})">
-          <i class="fa fa-minus" aria-hidden="true"></i>
+          Delete
         </button>
       </td>
       <td>
