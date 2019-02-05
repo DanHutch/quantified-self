@@ -15,6 +15,9 @@
   let lunch;
   let snack;
   let dinner;
+  let AddFoodDiv;
+  let mealID = null;
+
 
 
   function getFoods() {
@@ -208,6 +211,11 @@
         </td>
         <td id="edit-${food.id}-name-input-area" class="edit-inputs"></td>
         <td id="edit-${food.id}-calories-input-area" class="edit-inputs"></td>
+        <td>
+          <button id="add-food-${food.id}-to-meal" class="add-mealfood-button button" onclick="postMealFood(${food.id})" disabled>
+            +
+          </button>
+        </td>
       </tr>
       `)
     })
@@ -286,40 +294,60 @@
   };
 
   function loadDiary(mealsData) {
-console.log(mealsData)
+// console.log(mealsData)
     let breakfastEntries = mealsData[0].foods.map((food) => {
       return(`<tr class="mealfood">
-      <td>
-        <button id="delete-meal${mealsData[0].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[0].id}, ${food.id})">
-          <i class="fa fa-minus" aria-hidden="true"></i>
-        </button>
-      </td>
-      <td>
-        ${food.name}
-      </td>
-      <td>
-        ${food.calories}
-      </td>
-      </tr >`)
+        <td>
+          <button id="delete-meal${mealsData[0].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[0].id}, ${food.id})">
+            <i class="fa fa-minus" aria-hidden="true"></i>
+          </button>
+        </td>
+        <td>
+          ${food.name}
+        </td>
+        <td>
+          ${food.calories}
+        </td>
+        </tr >
+      `)
     });
-    breakfast.innerHTML = breakfastEntries.join(" ");
+    let addBreakfastFood = `
+        <tr>
+          <td>
+          <button id="add-breakfast-food" class="add-food-to-meal" onclick="addMealFood(${mealsData[0].id})">
+            Add Breakfast Food
+          </button>
+          </td>
+        </tr>
+    `
+
+    breakfast.innerHTML = breakfastEntries.join(" ") + addBreakfastFood;
 
     let lunchEntries = mealsData[1].foods.map((food) => {
       return (`<tr class="mealfood">
-            <td>
-        <button id="delete-meal${mealsData[1].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[1].id}, ${food.id})">
+        <td>
+          <button id="delete-meal${mealsData[1].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[1].id}, ${food.id})">
           <i class="fa fa-minus" aria-hidden="true"></i>
-        </button>
-      </td>
-      <td>
-        ${food.name}
-      </td>
-      <td>
-        ${food.calories}
-      </td>
-      </tr >`)
+          </button>
+        </td>
+        <td>
+          ${food.name}
+        </td>
+        <td>
+          ${food.calories}
+        </td>
+        </tr>
+      `)
     })
-    lunch.innerHTML = lunchEntries.join(" ")
+    let addLunchFood = `
+    <tr>
+      <td>
+        <button id="add-lunch-food" class="add-food-to-meal" onclick="addMealFood(${mealsData[1].id})">
+          Add Lunch Food
+            </button>
+      </td>
+    </tr>`
+    lunch.innerHTML = lunchEntries.join(" ") + addLunchFood
 
     let snackEntries = mealsData[2].foods.map((food) => {
       return (`<tr class="mealfood">
@@ -336,7 +364,15 @@ console.log(mealsData)
       </td>
       </tr >`)
     })
-    snack.innerHTML = snackEntries.join(" ")
+    let addSnackFood = `
+    <tr>
+      <td>
+        <button id="add-snack-food" class="add-food-to-meal" onclick="addMealFood(${mealsData[2].id})">
+          Add Snack Food
+            </button>
+      </td>
+    </tr>`
+    snack.innerHTML = snackEntries.join(" ") + addSnackFood;
 
     let dinnerEntries = mealsData[3].foods.map((food) => {
       return (`<tr class="mealfood">
@@ -353,7 +389,44 @@ console.log(mealsData)
       </td>
       </tr >`)
     })
-    dinner.innerHTML = dinnerEntries.join(" ")
+    let addDinnerFood = `
+    <tr>
+      <td>
+        <button id="add-dinner-food" class="add-food-to-meal" onclick="addMealFood(${mealsData[3].id})">
+          Add Dinner Food
+            </button>
+      </td>
+    </tr>`
+
+    dinner.innerHTML = dinnerEntries.join(" ") + addDinnerFood;
+  };
+
+  function postMealFood(foodID) {
+    let xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        getDiary();
+      }
+      else {
+        alert('something went wrong');
+      }
+    };
+    xhr.open('POST', `https://warm-cove-64806.herokuapp.com/api/v1/meals/${mealID}/foods/${foodID}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+    let addFoodsToMealButton = document.querySelectorAll(".add-mealfood-button")
+    addFoodsToMealButton.forEach((e) => {
+      e.disabled = true
+    });
+    mealID = null;
+  };
+
+  function addMealFood(mealIDIn) {
+    mealID = mealIDIn
+    let addFoodsToMealButton = document.querySelectorAll(".add-mealfood-button")
+    addFoodsToMealButton.forEach((e) => {
+      e.disabled = false
+    });
   };
 
   function getDiary() {
