@@ -19,6 +19,7 @@
   let mealID = null;
   let newDayGoalField;
   let createNewDayButton;
+  let dailySummary;
 
 
 
@@ -62,8 +63,13 @@
       </div>
 
       <div id="diary">
-        <button id="create-new-day-button">CREATE NEW DAY</button>
-        <input id="new-day-goal-field" class="field" type="text" placeholder="Calorie Goal...">
+        <div>
+          <button id="create-new-day-button">SAVE CURRENT DAY & CREATE NEW DAY</button>
+          <input id="new-day-goal-field" class="field" type="text" placeholder="Calorie Goal...">
+        </div>
+        <div id="daily-totals">
+
+        </div>
 
         <div id="breakfast" class="meal">
           <div class="diary-meal-header">Breakfast</div>
@@ -152,6 +158,7 @@
     createNewDayButton = document.querySelector('#create-new-day-button');
     createNewDayButton.addEventListener('click', function() {
       let goal = { "goal": newDayGoalField.value };
+
       addDay(goal);
     });
   };
@@ -225,11 +232,6 @@
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(newDayBody);
   };
-
-
-
-
-
 
   function searchFood(input) {
     if(input !== "") {
@@ -411,7 +413,7 @@
           <i class="fas fa-plus"></i>
         </button>
         </td>
-        <td></td>
+        <td>Breakfast Calories:</td>
         <td>${breakfastCalories}</td>
       </tr>
   `
@@ -443,7 +445,7 @@
         <i class="fas fa-plus"></i>
       </button>
     </td>
-    <td></td>
+    <td>Lunch Calories:</td>
     <td>${lunchCalories}</td>
   </tr>
   `
@@ -475,7 +477,7 @@
         <i class="fas fa-plus"></i>
       </button>
     </td>
-    <td></td>
+    <td>Snack Calories:</td>
     <td>${snackCalories}</td>
   </tr>
   `
@@ -507,12 +509,27 @@
         <i class="fas fa-plus"></i>
       </button>
     </td>
-    <td></td>
+    <td>Dinner Calories:</td>
     <td>${dinnerCalories}</td>
   </tr>
   `
 
   dinner.innerHTML = dinnerEntries.join(" ") + addDinnerFood;
+
+  let totalCalories = breakfastCalories + lunchCalories + snackCalories + dinnerCalories
+  dailySummary.innerHTML = `
+    <table>
+      <tr>
+        <th>Daily Goal</th>
+        <th>Daily Calories</th>
+      </tr>
+      <tr>
+        <td>${todayGoal}</td>
+        <td>${totalCalories}</td>
+      </tr>
+    </table>
+  `
+
 };
 
   function postMealFood(foodID) {
@@ -575,6 +592,7 @@
   function loadFoodsAndDiary() {
     loadStructure();
     getFoods();
+    dailySummary = document.querySelector('#daily-totals')
     foodsIndex = document.querySelector('#foods-index')
     foodsTableBody = document.querySelector('#foods-table-body')
     breakfast = document.querySelector('#breakfast-table-body')

@@ -37,7 +37,7 @@ body {
 
 #diary {
   position: relative;
-  bottom: 50px;
+  /* bottom: 50px; */
 }
 
 #foods-index {
@@ -102,6 +102,6 @@ body {
 }
 
 #create-new-day-button, #new-day-goal-field{
-  position: relative;
-  top: 40px;
+  /* position: relative;
+  top: 40px; */
 }
