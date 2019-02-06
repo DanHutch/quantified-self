@@ -60,7 +60,7 @@
       </div>
 
       <div id="diary">
-
+        <button id="create-new-day-button">CREATE NEW DAY</button>
         <div id="breakfast" class="meal">
           <div class="diary-meal-header">Breakfast</div>
           <table>
@@ -213,7 +213,7 @@
         <td id="edit-${food.id}-calories-input-area" class="edit-inputs"></td>
         <td>
           <button id="add-food-${food.id}-to-meal" class="add-mealfood-button button" onclick="postMealFood(${food.id})" disabled>
-            +
+            <i class="fas fa-plus"></i>
           </button>
         </td>
       </tr>
@@ -294,8 +294,10 @@
   };
 
   function loadDiary(mealsData) {
-// console.log(mealsData)
+
+    let breakfastCalories = 0;
     let breakfastEntries = mealsData[0].foods.map((food) => {
+      breakfastCalories += parseInt(food.calories);
       return(`<tr class="mealfood">
         <td>
           <button id="delete-meal${mealsData[0].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[0].id}, ${food.id})">
@@ -315,27 +317,31 @@
         <tr>
           <td>
           <button id="add-breakfast-food" class="add-food-to-meal" onclick="addMealFood(${mealsData[0].id})">
-            Add Breakfast Food
+            <i class="fas fa-plus"></i>
           </button>
           </td>
+          <td></td>
+          <td>${breakfastCalories}</td>
         </tr>
     `
-
     breakfast.innerHTML = breakfastEntries.join(" ") + addBreakfastFood;
 
+    let lunchCalories = 0;
     let lunchEntries = mealsData[1].foods.map((food) => {
-      return (`<tr class="mealfood">
-        <td>
-          <button id="delete-meal${mealsData[1].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[1].id}, ${food.id})">
-          <i class="fa fa-minus" aria-hidden="true"></i>
-          </button>
-        </td>
-        <td>
-          ${food.name}
-        </td>
-        <td>
-          ${food.calories}
-        </td>
+      lunchCalories += parseInt(food.calories);
+      return (`
+        <tr class="mealfood">
+          <td>
+            <button id="delete-meal${mealsData[1].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[1].id}, ${food.id})">
+             <i class="fa fa-minus" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>
+            ${food.name}
+          </td>
+          <td>
+            ${food.calories}
+          </td>
         </tr>
       `)
     })
@@ -343,60 +349,77 @@
     <tr>
       <td>
         <button id="add-lunch-food" class="add-food-to-meal" onclick="addMealFood(${mealsData[1].id})">
-          Add Lunch Food
-            </button>
-      </td>
-    </tr>`
-    lunch.innerHTML = lunchEntries.join(" ") + addLunchFood
-
-    let snackEntries = mealsData[2].foods.map((food) => {
-      return (`<tr class="mealfood">
-      <td>
-        <button id="delete-meal${mealsData[2].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[2].id}, ${food.id})">
-          <i class="fa fa-minus" aria-hidden="true"></i>
+          <i class="fas fa-plus"></i>
         </button>
       </td>
-      <td>
-        ${food.name}
-      </td>
-      <td>
-        ${food.calories}
-      </td>
-      </tr >`)
+      <td></td>
+      <td>${lunchCalories}</td>
+    </tr>
+    `
+    lunch.innerHTML = lunchEntries.join(" ") + addLunchFood
+
+    let snackCalories = 0;
+    let snackEntries = mealsData[2].foods.map((food) => {
+      snackCalories += parseInt(food.calories)
+      return (`
+        <tr class="mealfood">
+          <td>
+            <button id="delete-meal${mealsData[2].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[2].id}, ${food.id})">
+              <i class="fa fa-minus" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>
+            ${food.name}
+          </td>
+          <td>
+            ${food.calories}
+          </td>
+        </tr >
+      `)
     })
     let addSnackFood = `
     <tr>
       <td>
         <button id="add-snack-food" class="add-food-to-meal" onclick="addMealFood(${mealsData[2].id})">
-          Add Snack Food
-            </button>
-      </td>
-    </tr>`
-    snack.innerHTML = snackEntries.join(" ") + addSnackFood;
-
-    let dinnerEntries = mealsData[3].foods.map((food) => {
-      return (`<tr class="mealfood">
-      <td>
-        <button id="delete-meal${mealsData[3].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[3].id}, ${food.id})">
-          <i class="fa fa-minus" aria-hidden="true"></i>
+          <i class="fas fa-plus"></i>
         </button>
       </td>
-      <td>
-        ${food.name}
-      </td>
-      <td>
-        ${food.calories}
-      </td>
-      </tr >`)
+      <td></td>
+      <td>${snackCalories}</td>
+    </tr>
+    `
+    snack.innerHTML = snackEntries.join(" ") + addSnackFood;
+
+    dinnerCalories = 0;
+    let dinnerEntries = mealsData[3].foods.map((food) => {
+      dinnerCalories += parseInt(food.calories);
+      return (`
+        <tr class="mealfood">
+          <td>
+            <button id="delete-meal${mealsData[3].id}-food${food.id}-button" onclick="deleteMealFood(${mealsData[3].id}, ${food.id})">
+              <i class="fa fa-minus" aria-hidden="true"></i>
+            </button>
+          </td>
+          <td>
+            ${food.name}
+          </td>
+          <td>
+            ${food.calories}
+          </td>
+        </tr >
+      `)
     })
     let addDinnerFood = `
     <tr>
       <td>
         <button id="add-dinner-food" class="add-food-to-meal" onclick="addMealFood(${mealsData[3].id})">
-          Add Dinner Food
-            </button>
+          <i class="fas fa-plus"></i>
+        </button>
       </td>
-    </tr>`
+      <td></td>
+      <td>${dinnerCalories}</td>
+    </tr>
+    `
 
     dinner.innerHTML = dinnerEntries.join(" ") + addDinnerFood;
   };
