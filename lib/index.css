@@ -31,13 +31,17 @@ body {
   z-index: 2;
 }
 
-#foods-index {
+#foods-index, #diary {
   margin: 1em;
-  border-right: black 1px solid;
 }
 
 #diary {
-  margin: 1em;
+  position: relative;
+  bottom: 50px;
+}
+
+#foods-index {
+  border-right: black 1px solid;
 }
 
 
@@ -49,7 +53,7 @@ body {
   box-shadow: 0px 1px 0px 0px;
 }
 
-.delete, .edit{
+.delete, .edit, button{
   box-shadow: 0px 1px 1px 0px;
 }
 
@@ -91,4 +95,13 @@ body {
 .diary-meal-header{
   /* float: right; */
   text-transform: uppercase;
+}
+
+.underline{
+  border-bottom: 1px black solid;
+}
+
+#create-new-day-button, #new-day-goal-field{
+  position: relative;
+  top: 40px;
 }
