@@ -15,8 +15,10 @@
   let lunch;
   let snack;
   let dinner;
-  let AddFoodDiv;
+  let addFoodDiv;
   let mealID = null;
+  let newDayGoalField;
+  let createNewDayButton;
 
 
 
@@ -61,6 +63,8 @@
 
       <div id="diary">
         <button id="create-new-day-button">CREATE NEW DAY</button>
+        <input id="new-day-goal-field" class="field" type="text" placeholder="Calorie Goal...">
+
         <div id="breakfast" class="meal">
           <div class="diary-meal-header">Breakfast</div>
           <table>
@@ -137,7 +141,46 @@
     foodSearch.addEventListener('keyup', function () {
       searchFood(foodSearch.value)
     });
+
+
+
+
+
+
+    newDayGoalField = document.querySelector('#new-day-goal-field');
+
+    createNewDayButton = document.querySelector('#create-new-day-button');
+    createNewDayButton.addEventListener('click', function() {
+      let goal = newDayGoalField.value;
+      // console.log(goal);
+      addDay(goal);
+    });
   };
+
+
+
+
+
+  function addDay(goal) {
+    console.log(goal)
+    let xhr = new XMLHttpRequest();
+    let newDayBody = JSON.stringify(goal);
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        getDiary();
+      }
+      else {
+        alert('something went wrong');
+      }
+    };
+    xhr.open('POST', `https://warm-cove-64806.herokuapp.com/api/v1/days`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(newDayBody);
+  };
+
+
+
+
 
   function searchFood(input) {
     if(input !== "") {

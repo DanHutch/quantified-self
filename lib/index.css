@@ -101,7 +101,7 @@ body {
   border-bottom: 1px black solid;
 }
 
-#create-new-day-button{
+#create-new-day-button, #new-day-goal-field{
   position: relative;
   top: 40px;
 }
