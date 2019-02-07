@@ -92,7 +92,7 @@
         <br>
       `)
     })
-    diary.innerHTML = allMeals.join(" ")
+    diary.innerHTML = `<h2>Meal History</h2> ${allMeals.join(" ")}`
   }
 
   function loadStructure() {
@@ -112,6 +112,7 @@
       </div>
 
       <div id="foods-index">
+        <h2>Foods Pantry</h2>
         <table>
           <tr>
             <th></th>
@@ -153,6 +154,7 @@
 
     diary.innerHTML = `
       <div>
+        <h2>Latest Diary</h2>
         <button id="create-new-day-button">SAVE CURRENT DAY & CREATE NEW DAY</button>
         <input id="new-day-goal-field" class="field" type="text" placeholder="Calorie Goal...">
         </div>
