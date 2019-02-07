@@ -20,7 +20,7 @@
   let newDayGoalField;
   let createNewDayButton;
   let dailySummary;
-
+  let toggleButton;
 
 
   function getFoods() {
@@ -37,6 +37,64 @@
     xhr.send();
   };
 
+  function toggleDiaryCal() {
+    toggleButton = document.querySelector("#toggle-diary-cal-button")
+    if (!sessionStorage.getItem("cal_diary") || sessionStorage.getItem("cal_diary") == "diary") {
+      getCal();
+      sessionStorage.setItem("cal_diary", "cal")
+    } else if (sessionStorage.getItem("cal_diary") == "cal") {
+      sessionStorage.setItem("cal_diary", "diary")
+      loadFoodsAndDiary();
+    }
+
+  }
+
+  function getCal() {
+    let xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        let mealsResponse = JSON.parse(xhr.response);
+        loadCalendar(mealsResponse);
+      }
+    };
+    xhr.open('GET', `https://warm-cove-64806.herokuapp.com/api/v1/meals`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+  };
+
+  function loadCalendar(mealsData) {
+    allMeals = mealsData.reverse().map((meal) => {
+      let date = meal.date.split("T")[0]
+      let [year, month, day] = date.split("-")
+      let formattedDate = `${month}/${day}/${year}`
+      let mealCalories = 0
+      let foodsData = meal.foods.map((food) => {
+        mealCalories += parseInt(food.calories)
+        return(`
+            <tr>
+              <td>${food.name}</td>
+              <td>${food.calories}</td>
+            </tr>
+        `)
+      })
+      return(`
+        <div id="${meal.name}-${formattedDate}-header" class="calendar-meal">
+          <h3>${meal.name}: ${formattedDate}</h3>
+          <h5>...Total-Calories: ${mealCalories}</h5>
+          <table>
+            <tr>
+              <th>Food</th>
+              <th>Calories</th>
+            </tr>
+            ${foodsData.join(" ")}
+          </table>
+        </div>
+        <br>
+      `)
+    })
+    diary.innerHTML = allMeals.join(" ")
+  }
+
   function loadStructure() {
     container.innerHTML = `
       <div id="nav-bar">
@@ -48,85 +106,26 @@
           <input id="new-food-name-field" class="field" type="text" placeholder="New Food Name">
           <input id="new-food-calories-field" class="field" type="integer" placeholder="New Food Calories">
         </div>
+        <div id="toggle-button-div">
+          <button id="toggle-diary-cal-button" class="button" onclick="toggleDiaryCal()">Toggle Calendar/Diary</button>
+        </div>
       </div>
 
       <div id="foods-index">
         <table>
           <tr>
             <th></th>
-            <th>Name</th>
+            <th>Food</th>
             <th>Calories</th>
           </tr>
         <tbody id="foods-table-body">
         </tbody>
         </table>
       </div>
-
-      <div id="diary">
-        <div>
-          <button id="create-new-day-button">SAVE CURRENT DAY & CREATE NEW DAY</button>
-          <input id="new-day-goal-field" class="field" type="text" placeholder="Calorie Goal...">
-        </div>
-        <div id="daily-totals">
-
-        </div>
-
-        <div id="breakfast" class="meal">
-          <div class="diary-meal-header">Breakfast</div>
-          <table>
-            <tr>
-              <th></th>
-              <th class="diary-food-header">Name</th>
-              <th class="diary-food-header">Calories</th>
-            </tr>
-            <tbody id="breakfast-table-body">
-            </tbody>
-          </table>
-        </div>
-
-        <div id="lunch" class="meal">
-          <div class="diary-meal-header">Lunch</div>
-          <table>
-            <tr>
-              <th></th>
-              <th class="diary-food-header">Name</th>
-              <th class="diary-food-header">Calories</th>
-            </tr>
-            <tbody id="lunch-table-body">
-            </tbody>
-          </table>
-        </div>
-
-        <div id="snack" class="meal">
-          <div class="diary-meal-header">Snack</div>
-          <table>
-            <tr>
-              <th></th>
-              <th class="diary-food-header">Name</th>
-              <th class="diary-food-header">Calories</th>
-            </tr>
-            <tbody id="snack-table-body">
-            </tbody>
-          </table>
-        </div>
-
-        <div id="dinner" class="meal">
-          <div class="diary-meal-header">Dinner</div>
-          <table>
-            <tr>
-              <th></th>
-              <th class="diary-food-header">Name</th>
-              <th class="diary-food-header">Calories</th>
-            </tr>
-            <tbody id="dinner-table-body">
-            </tbody>
-          </table>
-        </div>
-
-        <div id="day-info"></div>
-
-      </div>
+      <div id="diary"></div>
     `
+
+
     addFoodButton = document.querySelector('#add-food-button');
     newFoodName = document.querySelector('#new-food-name-field');
     newFoodCalories = document.querySelector('#new-food-calories-field');
@@ -147,39 +146,99 @@
     foodSearch.addEventListener('keyup', function () {
       searchFood(foodSearch.value)
     });
+    // loadDiaryStructure();
+  };
 
+  function loadDiaryStructure() {
 
+    diary.innerHTML = `
+      <div>
+        <button id="create-new-day-button">SAVE CURRENT DAY & CREATE NEW DAY</button>
+        <input id="new-day-goal-field" class="field" type="text" placeholder="Calorie Goal...">
+        </div>
+        <div id="daily-totals">
 
+        </div>
 
+        <div id="breakfast" class="meal">
+          <div class="diary-meal-header">Breakfast</div>
+          <table>
+            <tr>
+              <th></th>
+              <th class="diary-food-header">Food</th>
+              <th class="diary-food-header">Calories</th>
+            </tr>
+            <tbody id="breakfast-table-body">
+            </tbody>
+          </table>
+        </div>
 
+        <div id="lunch" class="meal">
+          <div class="diary-meal-header">Lunch</div>
+          <table>
+            <tr>
+              <th></th>
+              <th class="diary-food-header">Food</th>
+              <th class="diary-food-header">Calories</th>
+            </tr>
+            <tbody id="lunch-table-body">
+            </tbody>
+          </table>
+        </div>
 
+        <div id="snack" class="meal">
+          <div class="diary-meal-header">Snack</div>
+          <table>
+            <tr>
+              <th></th>
+              <th class="diary-food-header">Food</th>
+              <th class="diary-food-header">Calories</th>
+            </tr>
+            <tbody id="snack-table-body">
+            </tbody>
+          </table>
+        </div>
+
+        <div id="dinner" class="meal">
+          <div class="diary-meal-header">Dinner</div>
+          <table>
+            <tr>
+              <th></th>
+              <th class="diary-food-header">Food</th>
+              <th class="diary-food-header">Calories</th>
+            </tr>
+            <tbody id="dinner-table-body">
+            </tbody>
+          </table>
+        </div>
+
+        <div id="day-info"></div>
+    `
     newDayGoalField = document.querySelector('#new-day-goal-field');
-
     createNewDayButton = document.querySelector('#create-new-day-button');
-    createNewDayButton.addEventListener('click', function() {
+    createNewDayButton.addEventListener('click', function () {
       let goal = { "goal": newDayGoalField.value };
-
       addDay(goal);
     });
   };
 
 
-  function addBreakfast(dayID) {
+  async function addBreakfast(dayID) {
     meal = {"meal_type": "Breakfast" }
     addMeal(meal, dayID);
   }
 
-  function addLunch(dayID) {
+  async function addLunch(dayID) {
     meal = {"meal_type": "Lunch" }
     addMeal(meal, dayID);
   }
 
-  function addSnack(dayID) {
+  async function addSnack(dayID) {
     meal = {"meal_type": "Snack" }
     addMeal(meal, dayID);
   }
 
-  function addDinner(dayID) {
+  async function addDinner(dayID) {
     meal = {"meal_type": "Dinner" }
     addMeal(meal, dayID);
   }
@@ -200,19 +259,15 @@
     xhr.send(addMealBody);
   }
 
-  async function addDayMeals(dayID){
-    addBreakfast(dayID);
-    addLunch(dayID);
-    addSnack(dayID);
-    addDinner(dayID);
-    // how can we make this wait to load
-    // getDiary();
-    // return("done");
+  async function addDayMeals(dayID) {
+    addBreakfast(dayID)
+    setTimeout(() => {addLunch(dayID)}, 10)
+    setTimeout(() => {addSnack(dayID)}, 20)
+    setTimeout(() => {addDinner(dayID)}, 30);
   }
 
 
   function addDay(goal) {
-    console.log(goal)
     let xhr = new XMLHttpRequest();
     let newDayBody = JSON.stringify(goal);
     xhr.onload = () => {
@@ -221,7 +276,6 @@
         dayID = response.day[0].id;
         addDayMeals(dayID).then(()=>{
           getDiary();
-          // location.reload();
         });
       }
       else {
@@ -413,7 +467,7 @@
           <i class="fas fa-plus"></i>
         </button>
         </td>
-        <td>Breakfast Calories:</td>
+        <td>Breakfast-Calories:</td>
         <td>${breakfastCalories}</td>
       </tr>
   `
@@ -445,7 +499,7 @@
         <i class="fas fa-plus"></i>
       </button>
     </td>
-    <td>Lunch Calories:</td>
+    <td>Lunch-Calories:</td>
     <td>${lunchCalories}</td>
   </tr>
   `
@@ -477,7 +531,7 @@
         <i class="fas fa-plus"></i>
       </button>
     </td>
-    <td>Snack Calories:</td>
+    <td>Snack-Calories:</td>
     <td>${snackCalories}</td>
   </tr>
   `
@@ -509,7 +563,7 @@
         <i class="fas fa-plus"></i>
       </button>
     </td>
-    <td>Dinner Calories:</td>
+    <td>Dinner-Calories:</td>
     <td>${dinnerCalories}</td>
   </tr>
   `
@@ -591,6 +645,8 @@
 
   function loadFoodsAndDiary() {
     loadStructure();
+    diary = document.querySelector('#diary')
+    loadDiaryStructure();
     getFoods();
     dailySummary = document.querySelector('#daily-totals')
     foodsIndex = document.querySelector('#foods-index')
@@ -599,7 +655,11 @@
     lunch = document.querySelector('#lunch-table-body')
     snack = document.querySelector('#snack-table-body')
     dinner = document.querySelector('#dinner-table-body')
-    getDiary();
+    if(!sessionStorage.getItem("cal_diary") || sessionStorage.getItem("cal_diary") == "diary") {
+      getDiary();
+    } else if(sessionStorage.getItem("cal_diary") == "cal") {
+      getCal();
+    }
   };
 
   document.addEventListener('DOMContentLoaded', loadFoodsAndDiary);
