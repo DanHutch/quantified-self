@@ -11,7 +11,7 @@ Quantified Self is a calorie-tracking app that is designed to allow a user to lo
 To begin, clone this repo:
 
 ```
-git@github.com:geoffreyadebonojo/quantified-self.git
+https://danhutch.github.io/quantified-self/
 ```
 After you `cd` into the project directory, run `npm install`, then `npm run build` from the command line.
 
